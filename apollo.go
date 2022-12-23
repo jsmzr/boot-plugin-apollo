@@ -28,5 +28,5 @@ func (a *apolloRemoteConfig) WatchChannel(rp viper.RemoteProvider) (<-chan *vipe
 
 func initProvider(c agollo.Client) {
 	viper.SupportedRemoteProviders = append(viper.SupportedRemoteProviders, "apollo")
-	viper.RemoteConfig = &apolloRemoteConfig{}
+	viper.RemoteConfig = &apolloRemoteConfig{c}
 }
