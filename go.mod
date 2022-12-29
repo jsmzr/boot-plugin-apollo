@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/apolloconfig/agollo/v4 v4.3.0
-	github.com/jsmzr/boot-plugin v0.3.0
+	github.com/jsmzr/boot-plugin v0.4.0
 	github.com/spf13/viper v1.14.0
 )
 

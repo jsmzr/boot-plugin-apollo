@@ -12,12 +12,13 @@ import (
 const configPrefix = "boot.apollo."
 
 var defaultConfig map[string]interface{} = map[string]interface{}{
-	"enabled":        true,
-	"order":          -21,
-	"namespace":      "application",
-	"cluster":        "default",
-	"isBackupConfig": false,
-	"mustStart":      true,
+	"enabled":           true,
+	"order":             -21,
+	"namespace":         "application",
+	"cluster":           "default",
+	"isBackupConfig":    false,
+	"mustStart":         true,
+	"syncServerTimeout": 5,
 }
 
 type ApolloPlugin struct{}
@@ -52,13 +53,16 @@ func (a *ApolloPlugin) Enabled() bool {
 
 func createClient(address, appId, namespace, secretKey string) (agollo.Client, error) {
 	c := &config.AppConfig{
-		AppID:          appId,
-		Cluster:        viper.GetString(configPrefix + "cluster"),
-		IP:             address,
-		NamespaceName:  namespace,
-		Secret:         secretKey,
-		IsBackupConfig: viper.GetBool(configPrefix + "isBackupConfig"),
-		MustStart:      viper.GetBool(configPrefix + "mustStart"),
+		AppID:             appId,
+		Cluster:           viper.GetString(configPrefix + "cluster"),
+		IP:                address,
+		NamespaceName:     namespace,
+		Secret:            secretKey,
+		IsBackupConfig:    viper.GetBool(configPrefix + "isBackupConfig"),
+		BackupConfigPath:  viper.GetString(configPrefix + "backupConfigPath"),
+		MustStart:         viper.GetBool(configPrefix + "mustStart"),
+		Label:             viper.GetString(configPrefix + "label"),
+		SyncServerTimeout: viper.GetInt(configPrefix + "syncServerTimeout"),
 	}
 	// viper read agollo content is prop
 	viper.SetConfigType("prop")
@@ -68,8 +72,6 @@ func createClient(address, appId, namespace, secretKey string) (agollo.Client, e
 }
 
 func init() {
-	for key := range defaultConfig {
-		viper.SetDefault(configPrefix+key, defaultConfig[key])
-	}
+	plugin.InitDefaultConfig(configPrefix, defaultConfig)
 	plugin.Register("apollo", &ApolloPlugin{})
 }
